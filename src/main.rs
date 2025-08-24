@@ -17,8 +17,6 @@ use tracing::error;
 use tokio::net::TcpListener;
 
 
-const USDC_MAINNET: &str = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
-const USDC_DEVNET: &str = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 
 #[tokio::main]
 async fn main() -> Result<()> {

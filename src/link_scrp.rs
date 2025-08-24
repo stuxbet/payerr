@@ -30,7 +30,7 @@ pub async fn create_link(Json(req): Json<LinkRequest>) -> Result<impl IntoRespon
             Err(_) => return Err(AppError::bad_request("recipient missing (no USDC_MAINNET env)")),
         },
     };
-        let USDC_DEVNET = match req.recipient {
+    let USDC_DEVNET = match req.recipient {
         Some(ref r) => r.to_string(),
         None => match env::var("USDC_DEVNET") {
             Ok(r) => r,
