@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-    "@/*": ["./components/*", "./lib/*"]
-    },
+      "@/*": ["./*"]    },
     "target": "ES2022",
     "lib": [
       "dom",
