@@ -1,14 +1,6 @@
-export type Invoice = {
-  id: string;
-  merchant_id: string;
-  amount_usdc: number;
-  recipient: string;
+export type LinkResponse = {
+  url: string;
   reference: string;
-  status: "pending" | "paid" | "expired" | "error";
-  due_at?: string | null;
-  memo?: string | null;
-  created_at: string;
-  solana_pay_url?: string;
 };
 
 const BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8787";
@@ -21,33 +13,33 @@ async function ok<T>(res: Response): Promise<T> {
   return res.json();
 }
 
-export async function createInvoice(input: {
+export function clusterFromEnv(): "devnet" | "mainnet-beta" {
+  const c = (process.env.NEXT_PUBLIC_SOLANA_CLUSTER || "devnet") as any;
+  return c === "mainnet-beta" ? "mainnet-beta" : "devnet";
+}
+
+export async function createLink(input: {
   amount_usdc: number;
   recipient: string;
   memo?: string;
   label?: string;
   message?: string;
-  email?: string;
-}): Promise<Invoice> {
-  const res = await fetch(`${BASE}/invoices`, {
+}): Promise<LinkResponse> {
+  // Backend expects decimal string `amount` and a USDC mint flag
+  const cluster = clusterFromEnv();
+  const body = {
+    recipient: input.recipient,
+    amount: input.amount_usdc.toFixed(2),
+    memo: input.memo,
+    label: input.label,
+    message: input.message,
+    use_usdc_mainnet: cluster === "mainnet-beta",
+    use_usdc_devnet: cluster === "devnet"
+  };
+  const res = await fetch(`${BASE}/api/link`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input)
+    body: JSON.stringify(body)
   });
-  return ok<Invoice>(res);
-}
-
-export async function getInvoice(id: string): Promise<Invoice> {
-  const res = await fetch(`${BASE}/invoices/${id}`, { cache: "no-store" });
-  return ok<Invoice>(res);
-}
-
-export async function listInvoices(): Promise<Invoice[]> {
-  const res = await fetch(`${BASE}/invoices`, { cache: "no-store" });
-  return ok<Invoice[]>(res);
-}
-
-export function clusterFromEnv(): "devnet" | "mainnet-beta" {
-  const c = (process.env.NEXT_PUBLIC_SOLANA_CLUSTER || "devnet") as any;
-  return c === "mainnet-beta" ? "mainnet-beta" : "devnet";
+  return ok<LinkResponse>(res);
 }

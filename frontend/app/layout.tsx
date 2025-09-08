@@ -20,7 +20,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <Link href="/">USDC Invoice Links</Link>
               </div>
               <nav style={{ display: "flex", gap: 12 }}>
-                <Link className="btn" href="/invoices">Invoices</Link>
                 <a className="btn" href="https://docs.solanapay.com" target="_blank" rel="noreferrer">Solana Pay Docs</a>
               </nav>
             </header>
