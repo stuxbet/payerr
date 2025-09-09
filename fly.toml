@@ -1,0 +1,42 @@
+# Fly.io app configuration for the Rust (Axum) backend
+
+# Change this to your actual app name after `fly launch`
+app = "payerr-backend"
+
+# Pick your preferred region (e.g., "iad", "sea", "lhr")
+primary_region = "iad"
+
+[build]
+# If you have a Dockerfile at repo root, Fly will use it.
+# Otherwise, run `fly launch` to generate one.
+
+[env]
+# Mirrors your local defaults
+PORT = "8080"
+RUST_LOG = "info"
+
+# NOTE: Do NOT put secrets here. Set these with `fly secrets set`:
+#   RECIPIENT_PUBKEY=...
+#   USDC_MAINNET=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+#   USDC_DEVNET=4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ["app"]
+
+  [http_service.concurrency]
+  type = "requests"
+  soft_limit = 100
+  hard_limit = 150
+
+  [[http_service.checks]]
+  interval = "10s"
+  timeout = "2s"
+  grace_period = "5s"
+  method = "GET"
+  path = "/healthz"
+
