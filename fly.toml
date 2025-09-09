@@ -1,7 +1,7 @@
 # Fly.io app configuration for the Rust (Axum) backend
 
 # Change this to your actual app name after `fly launch`
-app = "payerr-backend"
+app = "payerr"
 
 # Pick your preferred region (e.g., "iad", "sea", "lhr")
 primary_region = "iad"
